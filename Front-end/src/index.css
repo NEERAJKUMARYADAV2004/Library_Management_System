@@ -1,0 +1,145 @@
+:root {
+  --bg-main: #111827;     /* Deep Navy (Main Background) */
+  --bg-card: #1f2937;     /* Dark Slate (Card/Sidebar Background) */
+  --accent: #06b6d4;      /* Cyan (Primary Call to Action, Active Links) */
+  --text-main: #f9fafb;   /* Off-white (Body Text) */
+  --text-muted: #9ca3af;  /* Light Gray (Labels, Descriptions) */
+  --border-muted: #374151; /* Subtle Divider (Card Borders, Separators) */
+  --error: #ef4444;       /* Alert Red (Validation Failures) */
+  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* SLEEK THEMED SCROLLBAR */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-main);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #0891b2;
+}
+
+/* REMOVE NUMBER SPINNERS */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  min-height: 100vh;
+}
+
+.glass-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border-muted);
+  border-radius: 12px;
+  box-shadow: var(--shadow-sm);
+  padding: 1.5rem;
+}
+
+.btn-cyan {
+  background-color: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.btn-cyan:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.btn-cyan:disabled {
+  background-color: var(--text-muted);
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.input-field {
+  width: 100%;
+  background-color: var(--bg-main);
+  border: 1px solid var(--border-muted);
+  color: var(--text-main);
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  margin-top: 0.25rem;
+  margin-bottom: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.input-field:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+.input-field.invalid {
+  border-color: var(--error) !important;
+  box-shadow: 0 0 0 1px var(--error) !important;
+}
+
+label {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-muted);
+}
+
+th {
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  position: sticky;
+  top: 0;
+  background-color: var(--bg-card); /* Prevents transparent overlap during scroll */
+  z-index: 10;                     /* Ensures radio buttons scroll UNDER headers */
+}
+
+/* Base Layout Container */
+.app-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+}

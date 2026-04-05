@@ -79,7 +79,7 @@ const BookIssue = () => {
                                 <tr>
                                     <th>Title</th>
                                     <th>Author / Director</th>
-                                    <th>Serial</th>
+                                    <th>Serial No.</th>
                                     <th style={{ textAlign: 'center' }}>Select</th>
                                 </tr>
                             </thead>

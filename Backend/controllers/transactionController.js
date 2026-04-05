@@ -11,6 +11,18 @@ exports.requestIssue = async (req, res) => {
         const requester = await Member.findById(requesterId);
         if (!requester) return res.status(401).json({ message: "User not found." });
 
+        // Check for duplicate active transaction
+        const existing = await Transaction.findOne({
+            bookId,
+            memberId,
+            status: { $in: ['PendingIssue', 'ApprovedIssue', 'ReturnPending'] }
+        });
+
+        if (existing) {
+            return res.status(400).json({ message: "You already have an active request or an issued copy of this book." });
+        }
+
+
         if (requester.role !== 'Admin' && memberId !== requesterId) {
             return res.status(403).json({ message: "Forbidden" });
         }
@@ -42,10 +54,27 @@ exports.approveIssue = async (req, res) => {
         const transaction = await Transaction.findById(id);
         if (!transaction) return res.status(404).json({ message: "Not Found" });
 
+        const book = await Book.findById(transaction.bookId);
+        if (!book) return res.status(404).json({ message: "Book Not Found" });
+
+        // Count active issues (ApprovedIssue or ReturnPending)
+        const activeCount = await Transaction.countDocuments({
+            bookId: transaction.bookId,
+            status: { $in: ['ApprovedIssue', 'ReturnPending'] }
+        });
+
+        if (activeCount >= book.quantity) {
+            return res.status(400).json({ message: "All copies are already issued." });
+        }
+
         transaction.status = 'ApprovedIssue';
         transaction.approvalDate = new Date();
         await transaction.save();
-        await Book.findByIdAndUpdate(transaction.bookId, { status: 'Issued' });
+
+        // If the last copy is being issued, mark book as 'Issued'
+        if (activeCount + 1 === book.quantity) {
+            await Book.findByIdAndUpdate(transaction.bookId, { status: 'Issued' });
+        }
 
         res.status(200).json({ message: "SUCCESS" });
     } catch (err) { res.status(500).json({ message: err.message }); }
@@ -102,6 +131,8 @@ exports.approveReturn = async (req, res) => {
 
         transaction.status = 'Completed';
         await transaction.save();
+
+        // When a return is approved, it is now available again since at least one copy is free
         await Book.findByIdAndUpdate(transaction.bookId, { status: 'Available' });
 
         res.status(200).json({ message: "SUCCESS" });

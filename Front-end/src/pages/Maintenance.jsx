@@ -1,7 +1,19 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useModal } from '../context/ModalContext';
-import { sanitizeNumeric, isValidLength } from '../utils/validation';
+import { sanitizeNumeric, isValidLength, sanitizeAlphanumeric } from '../utils/validation';
+
+const bookCategories = [
+    "Action and Adventure", "Arts & Photography", "Biography", "Children's", "Comics", 
+    "Cookbooks", "Fantasy", "Fiction", "History", "Horror", "Mystery", "Non-Fiction", 
+    "Philosophy", "Romance", "Sci-Fi", "Self-Help", "Science & Tech", "Thriller", "Travel"
+];
+
+const movieCategories = [
+    "Action", "Animation", "Comedy", "Crime", "Documentary", "Drama", "Family", 
+    "Fantasy", "Horror", "Musical", "Mystery", "Romance", "Sci-Fi", "Short Film", 
+    "Thriller", "War", "Western"
+];
 
 const Maintenance = () => {
     const { showModal } = useModal();
@@ -165,7 +177,7 @@ const Maintenance = () => {
                     className="input-field"
                     placeholder={tab === 'book' ? "Enter Serial No..." : "Enter Aadhar No..."}
                     value={searchId}
-                    onChange={(e) => setSearchId(sanitizeNumeric(e.target.value, tab === 'book' ? 20 : 12))}
+                    onChange={(e) => setSearchId(tab === 'book' ? sanitizeAlphanumeric(e.target.value, 20) : sanitizeNumeric(e.target.value, 12))}
                     style={{ flex: 1, margin: 0 }}
                 />
                 <button type="button" onClick={handleFetch} className="btn-cyan" style={{ padding: '0.75rem 1.5rem' }}>Fetch</button>
@@ -189,8 +201,21 @@ const Maintenance = () => {
                             <option>Movie</option>
                         </select>
                     </div>
-                    <div><label>Category *</label><input type="text" className="input-field" value={bookForm.category} onChange={e => setBookForm({ ...bookForm, category: e.target.value })} required /></div>
-                    <div><label>Serial Number *</label><input type="text" className="input-field" value={bookForm.serialNo} onChange={e => setBookForm({ ...bookForm, serialNo: sanitizeNumeric(e.target.value, 15) })} required disabled={isUpdateMode} style={{ opacity: isUpdateMode ? 0.6 : 1 }} /></div>
+                    <div>
+                        <label>Category *</label>
+                        <select 
+                            className="input-field" 
+                            value={bookForm.category} 
+                            onChange={e => setBookForm({ ...bookForm, category: e.target.value })} 
+                            required
+                        >
+                            <option value="">Select Category</option>
+                            {(bookForm.type === 'Book' ? bookCategories : movieCategories).map(cat => (
+                                <option key={cat} value={cat}>{cat}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <div><label>Serial Number *</label><input type="text" className="input-field" value={bookForm.serialNo} onChange={e => setBookForm({ ...bookForm, serialNo: sanitizeAlphanumeric(e.target.value, 15) })} required disabled={isUpdateMode} style={{ opacity: isUpdateMode ? 0.6 : 1 }} /></div>
                     <div><label>Cost *</label><input type="number" min="0" className="input-field" value={bookForm.cost} onChange={e => setBookForm({ ...bookForm, cost: e.target.value })} required /></div>
                     <div><label>Quantity</label><input type="number" min="1" className="input-field" value={bookForm.quantity} onChange={e => setBookForm({ ...bookForm, quantity: e.target.value })} /></div>
                     <div><label>Procurement Date</label><input type="date" className="input-field" value={bookForm.procurementDate} onChange={e => setBookForm({ ...bookForm, procurementDate: e.target.value })} /></div>

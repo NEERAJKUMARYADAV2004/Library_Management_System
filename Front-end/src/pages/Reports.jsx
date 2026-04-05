@@ -174,7 +174,7 @@ const Reports = () => {
                                         <th>Name of Member</th>
                                         <th>Contact Number</th>
                                         <th>Contact Address</th>
-                                        <th>Aadhar Card No</th>
+                                        <th>Aadhar Card No.</th>
                                         <th>Start Date</th>
                                         <th>End Date</th>
                                         <th>Status</th>
@@ -260,7 +260,7 @@ const Reports = () => {
                                     <tr>
                                         <th>Serial No Book/Movie</th>
                                         <th>Name of Book/Movie</th>
-                                        <th>Membership Id</th>
+                                        <th>Aadhar Card No.</th>
                                         <th>Date of Issue</th>
                                         <th>Date of return</th>
                                     </tr>
